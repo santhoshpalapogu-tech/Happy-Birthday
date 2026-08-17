@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Someone Special ❤️</title>
+     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+              * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            touch-action: manipulation;
+            background: radial-gradient(circle at top, #ffdde8, #ffe9f2, #ffd1dc, #17001f);
+        }
+
+        /* --- Background Floating Hearts --- */
+        .heart {
+            position: fixed;
+            bottom: -40px;
+            color: rgba(255, 70, 130, 0.85);
+            animation: floatHeart linear infinite;
+            z-index: 1;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.9);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-115vh) rotate(360deg) scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        /* --- Background Sparkles --- */
+        .sparkle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 0 12px white;
+            animation: sparkle 2s infinite ease-in-out;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.3);
+                opacity: 0.9;
+            }
+        }
+
+        /* --- Background Balloons --- */
+        .balloon {
+            position: absolute;
+            width: 55px;
+            height: 72px;
+            border-radius: 50% 50% 45% 45%;
+            animation: balloonFloat 4.5s ease-in-out infinite;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.75;
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 85px;
+            background: rgba(255, 255, 255, 0.6);
+            left: 50%;
+            top: 70px;
+        }
+
+        @keyframes balloonFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(-3deg);
+            }
+            50% {
+                transform: translateY(-24px) rotate(4deg);
+            }
+        }
+
+        /* --- App & Card Layout --- */
+        #app {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .step {
+            position: absolute;
+            width: 100%;
+            max-width: 800px;
+            padding: 35px;
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(121, 0, 65, 0.15);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .step.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
+            color: #ffffff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.35);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.45);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ec4899, #f43f5e, #e11d48);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .heart-beat {
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25%, 75% { transform: scale(1.15); }
+            50% { transform: scale(1); }
+        }
+
+        .emoji {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        #progress-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 400px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 3px;
+            z-index: 100;
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ec4899, #f43f5e);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating Background Balloons -->
+    <div class="balloon bg-pink-400 left-8 top-16"></div>
+    <div class="balloon bg-purple-400 right-10 top-24" style="animation-delay: 1.2s"></div>
+    <div class="balloon bg-rose-300 left-1/4 bottom-16" style="animation-delay: 2.1s"></div>
+    <div class="balloon bg-red-400 right-1/4 bottom-24" style="animation-delay: 0.6s"></div>
+
+    <div id="app">
+        <!-- Progress Bar -->
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+
+        <div id="content">
+            <!-- Step 1: Initial Reveal -->
+            <div class="step active" id="step1">
+                <div class="emoji heart-beat">❤️</div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-gradient">Hey You </h1>
+                <p class="text-xl text-gray-700 mb-8"> Prathi saari normal wishes enduku ani kothaga try chesa neekosam something Special</p>
+                <button class="btn" id="start-btn">CHUDU</button>
+            </div>
+
+            <!-- Step 2: Birthday Message -->
+            <div class="step" id="step2">
+                <div class="emoji">🎉</div>
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gradient">HAPPY BIRTHDAY, SANTHOSHA! ❤️</h2>
+                <p class="text-lg text-gray-700 mb-6">Wish you many more happy returns of the day!</p>
+                <button class="btn" id="next-btn-2">One Last Memory of us </button>
+            </div>
+
+            <!-- Step 3: Memory Lane -->
+            <div class="step" id="step3">
+                <div class="emoji">📸</div>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gradient">Remember When...</h2>
+                <div class="bg-gradient-to-r from-pink-200 to-rose-200 rounded-xl p-4 mb-4 flex flex-col justify-center items-center">
+                    <img src="birthday.jpg" alt="Memory" class="max-h-56 max-w-full object-contain rounded-lg shadow-md">
+                    <p class="text-md text-gray-700 italic mt-2">The moment I will never forget</p>
+                </div>
+                <p class="text-sm md:text-base text-gray-700 mb-4 leading-relaxed">
+                   Aa First pic lo em teliyani aa innocence simple college days nunchi cut chesthe second pic lo aa frame varaku pure affection. 
+                       Appudu telidhu kadaaa, ayina Entha time gadichina manam matladukunna lekunna, naa vaipu nunchi adhe affection chupistha mari neee vaipu emo ly ippudu adhi enduku 🤷‍♂️
+                </p>
+                <button class="btn" id="next-btn-3">One Last Thing</button>
+            </div>
+
+            <!-- Step 4: Final Wish -->
+            <div class="step" id="step4">
+                <div class="emoji">🎂</div>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gradient">My Birthday Wish For You</h2>
+                <p class="text-sm md:text-base text-gray-700 mb-6 leading-relaxed">
+                    Happy Birthday to my absolute favorite! 🤍 I am so incredibly blessed to have a bond like ours. You are the person who holds my favorite comfort zone! Enni days and months pass ayna, mana long hours phone calls and short sweet memories eppatiki change avvavu. Manaki long gaps unna, the love and care we show each other stays exactly the same. Thank you for being that one constant space where I can share all my silly stuff and for being such a beautiful part of my journey. Stay blessed and happy always! May this year bring you endless reasons to smile. 💖✨
+                </p>
+                <button class="btn animate-pulse" id="confetti-btn">TAP TO CELEBRATE 🎉</button>
+                <p class="mt-4 text-sm text-gray-500 font-medium">enni sarlu tap chesthe anni papers vasthai kasta padi chesa  </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Floating Heart Particles Generator
+        function createFloatingHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = ['❤️', '💖', '💕', '💗', '💘', '🌸'][Math.floor(Math.random() * 6)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = (16 + Math.random() * 24) + 'px';
+                heart.style.animationDuration = (5 + Math.random() * 4) + 's';
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 9000);
+            }, 400);
+        }
+
+        // Sparkling Star Generator
+        function createSparkles() {
+            for (let i = 0; i < 30; i++) {
+                const sp = document.createElement('div');
+                sp.className = 'sparkle';
+                sp.style.left = Math.random() * 100 + 'vw';
+                sp.style.top = Math.random() * 100 + 'vh';
+                sp.style.animationDelay = Math.random() * 3 + 's';
+                document.body.appendChild(sp);
+            }
+        }
+
+        // Step Navigation Logic (4 Steps)
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function updateProgressBar() {
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        function showStep(stepNumber) {
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+
+            const nextStepEl = document.getElementById(`step${stepNumber}`);
+            if (nextStepEl) {
+                nextStepEl.classList.add('active');
+            }
+
+            updateProgressBar();
+        }
+
+        document.getElementById('start-btn').addEventListener('click', () => {
+            currentStep = 2;
+            showStep(currentStep);
+        });
+
+        document.getElementById('next-btn-2').addEventListener('click', () => {
+            currentStep = 3;
+            showStep(currentStep);
+        });
+
+        document.getElementById('next-btn-3').addEventListener('click', () => {
+            currentStep = 4;
+            showStep(currentStep);
+        });
+
+        // Confetti Celebration Trigger
+        document.getElementById('confetti-btn').addEventListener('click', () => {
+            confetti({
+                particleCount: 120,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffc0cb']
+            });
+
+            setTimeout(() => {
+                confetti({
+                    particleCount: 40,
+                    spread: 60,
+                    origin: { y: 0.5 },
+                    shapes: ['heart'],
+                    colors: ['#ff0000', '#ff69b4']
+                });
+            }, 250);
+
+            setTimeout(() => {
+                confetti({
+                    particleCount: 30,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    shapes: ['heart'],
+                    colors: ['#ff0000', '#ff69b4']
+                });
+
+                confetti({
+                    particleCount: 30,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    shapes: ['heart'],
+                    colors: ['#ff0000', '#ff69b4']
+                });
+            }, 500);
+        });
+
+        // Start background animations
+        createFloatingHearts();
+        createSparkles();
+        updateProgressBar();
+    </script>
+</body>
+
+</html>
